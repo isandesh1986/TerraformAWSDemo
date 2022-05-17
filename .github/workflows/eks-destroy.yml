@@ -1,0 +1,32 @@
+name: Destroy AWS EKS
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform-actions:
+    name: Workflow
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Checkout Repository
+      uses: actions/checkout@master
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-1
+
+    - name: Terraform Init
+      id: init
+      working-directory: "tf-s3"
+      run: terraform init -backend-config=bucket=ips-s3-state -backend-config=key=state/tf.state -backend-config=region=eu-west-1
+      continue-on-error: false
+
+    - name: Terraform Apply
+      id: apply
+      working-directory: "tf-s3"
+      run: terraform apply -destroy --auto-approve
+      continue-on-error: false
