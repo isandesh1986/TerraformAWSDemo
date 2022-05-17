@@ -1,29 +1,32 @@
 name: Provision AWS EKS
 
-on: [workflow_dispatch]
+on:
+  workflow_dispatch:
 
 jobs:
-  terraform_apply:
+  terraform-actions:
+    name: Workflow
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    
+
+    - name: Checkout Repository
+      uses: actions/checkout@master
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-1
+
     - name: Terraform Init
-      uses: hashicorp/terraform-github-actions/init@v0.4.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        TF_ACTION_WORKING_DIR: 'modules'
-        AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        
-    - name: Terraform Validate
-      uses: hashicorp/terraform-github-actions/validate@v0.3.7
+      id: init
+      working-directory: "tf-s3"
+      run: terraform init
+      continue-on-error: false
 
     - name: Terraform Apply
-      uses: hashicorp/terraform-github-actions/apply@v0.4.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        TF_ACTION_WORKING_DIR: 'modules'
-        AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        args: '-var="env=dev"'
+      id: apply
+      working-directory: "tf-s3"
+      run: terraform apply -no-color
+      continue-on-error: false
