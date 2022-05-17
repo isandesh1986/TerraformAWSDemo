@@ -22,7 +22,7 @@ jobs:
     - name: Terraform Init
       id: init
       working-directory: "tf-s3"
-      run: terraform init
+      run: terraform init -backend-config=bucket=ipsbucket-64826 -backend-config=key=s3-state/tf.state -backend-config=region=eu-west-1
       continue-on-error: false
 
     - name: Terraform Apply
