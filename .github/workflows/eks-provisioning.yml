@@ -28,5 +28,5 @@ jobs:
     - name: Terraform Apply
       id: apply
       working-directory: "tf-s3"
-      run: terraform apply -no-color
+      run: terraform apply --auto-approve
       continue-on-error: false
