@@ -32,7 +32,7 @@ jobs:
     - name: Terraform Init
       id: init
       working-directory: "tf-s3"
-      run: terraform init -backend-config=bucket='${{ github.event.inputs.s3_bucket }}' -backend-config=key='${{ github.event.inputs.s3_keypath }}' -backend-config=region=eu-west-1
+      run: terraform init -backend-config=bucket=${{ github.event.inputs.s3_bucket }} -backend-config=key=${{ github.event.inputs.s3_keypath }} -backend-config=region=eu-west-1
       continue-on-error: false
 
     - name: Terraform Apply
