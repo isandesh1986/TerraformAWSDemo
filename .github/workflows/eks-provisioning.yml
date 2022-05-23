@@ -44,3 +44,24 @@ jobs:
       working-directory: "modules"
       run: terraform apply -var 'cluster_name=${{ github.event.inputs.cluster_name }}' --auto-approve
       continue-on-error: false
+      
+    - name: Install NGINX Ingress controller
+      id: installnginx
+      run: ./modules/scripts/install-nginx-controller.sh
+      shell: bash
+      
+    - name: Obtain Ingress Controller domain name
+      id: obtaindns
+      run: ./modules/scripts/install-nginx-controller.sh
+      shell: bash
+      
+    - name: Publish Ingress Controller domain name
+      id: pubishdns
+      run: ./modules/scripts/obtain-dns.sh
+      shell: bash
+  
+    - name: Install Rancher
+      id: installrancher
+      run: ./modules/scripts/install-rancher.sh
+      shell: bash
+  
