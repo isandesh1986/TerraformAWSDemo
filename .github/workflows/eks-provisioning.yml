@@ -21,7 +21,6 @@ jobs:
   terraform-actions:
     name: Provisioning   
     runs-on: ubuntu-latest
-    permissions: read-all|write-all
     steps:
 
     - name: Checkout Repository
