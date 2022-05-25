@@ -15,14 +15,12 @@ on:
         description: 'Path within the S3 bucket where the Terraform state of the cluster will be stored.'
         required: true
         type: string
-        
-permissions: read-all|write-all
-        
-
+       
 jobs:
   terraform-actions:
     name: Provisioning   
     runs-on: ubuntu-latest
+    permissions: read-all|write-all
     steps:
 
     - name: Checkout Repository
