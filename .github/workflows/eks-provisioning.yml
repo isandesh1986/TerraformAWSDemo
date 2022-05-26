@@ -44,22 +44,22 @@ jobs:
 #       run: terraform apply -var 'cluster_name=${{ github.event.inputs.cluster_name }}' --auto-approve
 #       continue-on-error: false
       
-    - name: Install NGINX Ingress controller
-      id: installnginx
-      run: |      
-        aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region 'eu-west-1'        
-        helm repo add bitnami "https://charts.bitnami.com/bitnami"
-        echo "here"
-        helm repo update
-        echo "here2222"
-        helm upgrade --install nginx-ingress "nginx-ingress-controller" --set ingressClassResource.default=true --set containerSecurityContext.allowPrivilegeEscalation=false --repo "https://charts.bitnami.com/bitnami" --namespace nginx-ingress --create-namespace
-        echo "here3333"
-      shell: bash
+#     - name: Install NGINX Ingress controller
+#       id: installnginx
+#       run: |      
+#         aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region 'eu-west-1'        
+#         helm repo add bitnami "https://charts.bitnami.com/bitnami"
+#         echo "here"
+#         helm repo update
+#         echo "here2222"
+#         helm upgrade --install nginx-ingress "nginx-ingress-controller" --set ingressClassResource.default=true --set containerSecurityContext.allowPrivilegeEscalation=false --repo "https://charts.bitnami.com/bitnami" --namespace nginx-ingress --create-namespace
+#         echo "here3333"
+#       shell: bash
       
     - name: Obtain Ingress Controller domain name
       id: obtaindns
       run: | 
-       dnsname=$(./modules/scripts/obtain-dns.sh)
+       dnsname=$(sudo ./modules/scripts/obtain-dns.sh)
        echo $dnsname
        echo "::set-output name=dnsname::$dnsname"
       shell: bash
