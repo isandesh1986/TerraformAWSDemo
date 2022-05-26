@@ -52,7 +52,7 @@ jobs:
     - name: Obtain Ingress Controller domain name
       id: obtaindns
       run: | 
-       dnsname="sample DNS"
+       export dnsname="sample DNS"
        echo "::set-output name=dnsname::$(dnsname)"
       shell: bash
   
