@@ -59,7 +59,7 @@ jobs:
     - name: Obtain Ingress Controller domain name
       id: obtaindns
       run: | 
-       dnsname=$(sudo ./modules/scripts/obtain-dns.sh)
+       dnsname=$(./modules/scripts/obtain-dns.sh)
        echo $dnsname
        echo "::set-output name=dnsname::$dnsname"
       shell: bash
