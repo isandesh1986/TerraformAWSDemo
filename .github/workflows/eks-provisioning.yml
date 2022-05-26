@@ -47,8 +47,13 @@ jobs:
     - name: Install NGINX Ingress controller
       id: installnginx
       run: |      
-        aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region 'eu-west-1'
-        ./modules/scripts/install-nginx-controller.sh
+        aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region 'eu-west-1'        
+        helm repo add bitnami "https://charts.bitnami.com/bitnami"
+        echo "here"
+        helm repo update
+        echo "here2222"
+        helm upgrade --install nginx-ingress "nginx-ingress-controller" --set ingressClassResource.default=true --set containerSecurityContext.allowPrivilegeEscalation=false --repo "https://charts.bitnami.com/bitnami" --namespace nginx-ingress --create-namespace
+        echo "here3333"
       shell: bash
       
     - name: Obtain Ingress Controller domain name
