@@ -46,9 +46,8 @@ jobs:
       
     - name: Install NGINX Ingress controller
       id: installnginx
-      run: |
-        pwd
-        ls -alrt
+      run: |      
+        aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region 'eu-west-1'
         ./modules/scripts/install-nginx-controller.sh
       shell: bash
       
