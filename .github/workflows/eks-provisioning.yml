@@ -59,6 +59,7 @@ jobs:
     - name: Obtain Ingress Controller domain name
       id: obtaindns
       run: | 
+       git update-index --chmod=+x ./modules/scripts/obtain-dns.sh
        dnsname=$(./modules/scripts/obtain-dns.sh)
        echo $dnsname
        echo "::set-output name=dnsname::$dnsname"
@@ -84,5 +85,7 @@ jobs:
         
     - name: Install Rancher
       id: installrancher
-      run: ./modules/scripts/install-rancher.sh ${{ steps.obtaindns.outputs.dnsname }}
+      run: |
+        git update-index --chmod=+x ./modules/scripts/install-rancher.sh
+        ./modules/scripts/install-rancher.sh ${{ steps.obtaindns.outputs.dnsname }}
       shell: bash
