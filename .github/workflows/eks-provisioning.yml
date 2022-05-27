@@ -62,7 +62,7 @@ jobs:
        aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region 'eu-west-1' 
        helm list
        pwd
-       ls -lrta       
+       ls -lrta ./modules/scripts 
        chmod +x ./modules/scripts/obtain-dns.sh
        dnsname=$(./modules/scripts/obtain-dns.sh)
        echo $dnsname
