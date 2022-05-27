@@ -7,6 +7,7 @@ on:
         description: 'Name for the cluster.'
         required: true
         type: string
+        default: "def cluster name"
       s3_bucket:
         description: 'Name of the S3 bucket where the Terraform state of the cluster will be stored.'
         required: true
