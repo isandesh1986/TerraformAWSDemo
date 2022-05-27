@@ -2,6 +2,19 @@ name: Destroy AWS EKS
 
 on:
   workflow_dispatch:
+    inputs:
+      cluster_name:
+        description: 'Name for the cluster.'
+        required: true
+        type: string
+      s3_bucket:
+        description: 'Name of the S3 bucket where the Terraform state of the cluster will be stored.'
+        required: true
+        type: string
+      s3_keypath:
+        description: 'Path within the S3 bucket where the Terraform state of the cluster will be stored.'
+        required: true
+        type: string
 
 jobs:
   terraform-actions:
@@ -19,10 +32,21 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-west-1
 
+    - name: Uninstall Helm charts
+      id: uninstallhelmcharts
+      run: |
+        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region eu-west-1
+        helm list --all-namespaces
+        helm ls -a --all-namespaces | awk 'NR > 1 { print  "-n "$2, $1}' | xargs -L1 helm delete
+        echo 'LIST OF RELEASES AFTER HELM UNINSTALL..'
+        helm list --all-namespaces
+
     - name: Terraform Init
       id: init
-      working-directory: "tf-s3"
-      run: terraform init -backend-config=bucket=ips-s3-state -backend-config=key=state/tf.state -backend-config=region=eu-west-1
+      working-directory: "modules"
+      run: terraform init -backend-config=bucket=${{ github.event.inputs.s3_bucket }} -backend-config=key=${{ github.event.inputs.s3_keypath }} -backend-config=region=eu-west-1
       continue-on-error: false
 
     - name: Terraform Apply
