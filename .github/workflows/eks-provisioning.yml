@@ -59,6 +59,8 @@ jobs:
     - name: Obtain Ingress Controller domain name
       id: obtaindns
       run: | 
+       aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region 'eu-west-1' 
+       helm list
        git update-index --chmod=+x ./modules/scripts/obtain-dns.sh
        dnsname=$(./modules/scripts/obtain-dns.sh)
        echo $dnsname
