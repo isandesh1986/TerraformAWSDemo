@@ -7,14 +7,14 @@ on:
         description: 'Name for the cluster.'
         required: true
         type: string
-#       s3_bucket:
-#         description: 'Name of the S3 bucket where the Terraform state of the cluster will be stored.'
-#         required: true
-#         type: string
-#       s3_keypath:
-#         description: 'Path within the S3 bucket where the Terraform state of the cluster will be stored.'
-#         required: true
-#         type: string
+      s3_bucket:
+        description: 'Name of the S3 bucket where the Terraform state of the cluster will be stored.'
+        required: true
+        type: string
+      s3_keypath:
+        description: 'Path within the S3 bucket where the Terraform state of the cluster will be stored.'
+        required: true
+        type: string
        
 jobs:
   terraform-actions:
@@ -32,29 +32,29 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-west-1
 
-#     - name: Terraform Init
-#       id: init
-#       working-directory: "modules"
-#       run: terraform init -backend-config=bucket=${{ github.event.inputs.s3_bucket }} -backend-config=key=${{ github.event.inputs.s3_keypath }} -backend-config=region=eu-west-1
-#       continue-on-error: false
+    - name: Terraform Init
+      id: init
+      working-directory: "modules"
+      run: terraform init -backend-config=bucket=${{ github.event.inputs.s3_bucket }} -backend-config=key=${{ github.event.inputs.s3_keypath }} -backend-config=region=eu-west-1
+      continue-on-error: false
 
-#     - name: Terraform Apply
-#       id: apply
-#       working-directory: "modules"
-#       run: terraform apply -var 'cluster_name=${{ github.event.inputs.cluster_name }}' --auto-approve
-#       continue-on-error: false
+    - name: Terraform Apply
+      id: apply
+      working-directory: "modules"
+      run: terraform apply -var 'cluster_name=${{ github.event.inputs.cluster_name }}' --auto-approve
+      continue-on-error: false
       
-#     - name: Install NGINX Ingress controller
-#       id: installnginx
-#       run: |      
-#         aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region 'eu-west-1'        
-#         helm repo add bitnami "https://charts.bitnami.com/bitnami"
-#         echo "here"
-#         helm repo update
-#         echo "here2222"
-#         helm upgrade --install nginx-ingress "nginx-ingress-controller" --set ingressClassResource.default=true --set containerSecurityContext.allowPrivilegeEscalation=false --repo "https://charts.bitnami.com/bitnami" --namespace nginx-ingress --create-namespace
-#         echo "here3333"
-#       shell: bash
+    - name: Install NGINX Ingress controller
+      id: installnginx
+      run: |      
+        aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region 'eu-west-1'        
+        helm repo add bitnami "https://charts.bitnami.com/bitnami"
+        echo "here"
+        helm repo update
+        echo "here2222"
+        helm upgrade --install nginx-ingress "nginx-ingress-controller" --set ingressClassResource.default=true --set containerSecurityContext.allowPrivilegeEscalation=false --repo "https://charts.bitnami.com/bitnami" --namespace nginx-ingress --create-namespace
+        echo "here3333"
+      shell: bash
       
     - name: Obtain Ingress Controller domain name
       id: obtaindns
