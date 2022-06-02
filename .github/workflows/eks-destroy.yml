@@ -33,16 +33,16 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: eu-west-1
 
-    - name: Uninstall Helm charts
-      id: uninstallhelmcharts
-      run: |
-        aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region eu-west-1
-        helm list --all-namespaces
-        helm ls -a --all-namespaces | awk 'NR > 1 { print  "-n "$2, $1}' | xargs -L1 helm delete
-        echo 'LIST OF RELEASES AFTER HELM UNINSTALL..'
-        helm list --all-namespaces
+#     - name: Uninstall Helm charts
+#       id: uninstallhelmcharts
+#       run: |
+#         aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+#         aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#         aws eks update-kubeconfig --name ${{ github.event.inputs.cluster_name }} --region eu-west-1
+#         helm list --all-namespaces
+#         helm ls -a --all-namespaces | awk 'NR > 1 { print  "-n "$2, $1}' | xargs -L1 helm delete
+#         echo 'LIST OF RELEASES AFTER HELM UNINSTALL..'
+#         helm list --all-namespaces
 
     - name: Terraform Init
       id: init
